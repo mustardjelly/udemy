@@ -8,6 +8,11 @@
 class Game:
     # Add game constants here
     PERFECT_SCORE = 21
+    ACE_1 = 1
+    ACE = 11
+    DRAW = "d"
+    STAND = "s"
+
     LOGO = """
     .------.            _     _            _    _            _    
     |A_  _ |.          | |   | |          | |  (_)          | |   

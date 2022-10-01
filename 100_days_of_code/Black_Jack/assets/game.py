@@ -1,3 +1,4 @@
+import random
 from typing import Iterable, List
 
 from .constants import Game as Constants
@@ -9,12 +10,19 @@ class Game:
     """The black jack game engine."""
 
     _players: List[Player] = []
+    VALID_CARDS = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+    VALID_PLAYER_OPTIONS = [Constants.DRAW, Constants.STAND]
+    game_cards = []
 
     def __init__(self, *args):
         """Things to initialize when making a game class"""
         for item in args:
             if isinstance(item, Player):
                 self.add_player(item)
+
+    def deal_game_cards(self):
+        """Deal the games cards"""
+        self.game_cards = [card for card_suit in [self.VALID_CARDS for _ in range(4)] for card in card_suit]
                 
 
     def add_player(self, player: Player) -> bool:
@@ -44,16 +52,15 @@ class Game:
         """Deal cards to each player in the game."""
         for player in self._players:
             for _ in range(2):
-                player.draw_card()
+                player.add_card()
 
     def deal_card(self, player: Player) -> None:
         """Deal a card to a single player."""
         assert isinstance(player, Player)
 
-        if player.is_bust():
-            return
+        card = random.sample(self.VALID_CARDS)
 
-        player.draw_card()
+        player.add_card(card)
 
     def print_game_state(self) -> None:
         """Prints the current game state of each player."""
@@ -84,25 +91,29 @@ class Game:
                             print("Please use `d` or `s` to enter an option.")
                             result = input(f"Draw(d) or stand(s) {player.name}?")
                         
-                        if result[0].lower() in ["d", "s"]:
+                        if result[0].lower() in self.VALID_PLAYER_OPTIONS:
                             valid = True
                             continue
                         
-                    if result == "d":
-                        player.draw_card()
+                    if result == Constants.DRAW:
+                        self.deal_card(player)
                         if player.is_bust:
-                            print(f"{player.name} has gone bust!")
+                            print(
+                                f"{player.name} has gone bust\n"
+                            )
                             # print hand
                             
                         self.print_game_state()
-                    elif result == "s":
+                        
+                    elif result == Constants.STAND:
                         player.stand = True
                         to_play.remove(player)
+                        break
 
-            print("All players have acted. Dealers move.")
+            print("All players have acted. Dealers move")
             self.print_game_state()
             
-            # Take dealer actinos
+            # Take dealer actions
             # deterine a winner
             # Ask for reset
 
