@@ -1,14 +1,12 @@
-import random
 from typing import List
 
-from .constants import Game as GameConstants, Player as PlayerConstants
-from .errors import MethodNotImplemented
+from assets.constants import Game as GameConstants, Player as PlayerConstants
 
 
 class Player:
     """A black jack player"""
     # Private attributes about a player. Expose them using properties
-    _hand:List[int] = []
+    _hand:List[int] = list
     _stand: bool = False
     _is_computer: bool = False
     _is_dealer:bool = False
@@ -20,6 +18,7 @@ class Player:
         self._name = name
         self._is_dealer = is_dealer
         self._is_computer = is_computer
+        self._hand = list()
 
     def __str__(self) -> str:
         """String representation of a player."""
@@ -60,9 +59,9 @@ class Player:
         return self.score > GameConstants.PERFECT_SCORE
 
     @property
-    def _should_draw(self) -> bool:
+    def should_draw(self) -> bool:
         """Logic used by the computer to determine if they should draw."""
-        raise MethodNotImplemented()
+        return self._score <= PlayerConstants.THRESHOLD
 
     @property
     def score(self) -> int:
@@ -79,9 +78,9 @@ class Player:
         if self.stand:
             print(f"Player is standing and cannot be dealt a card.")
 
-        elif not self.is_bust():
+        elif not self.is_bust:
             self._hand.append(card)
-            self._score = sum(self._hand)
+            self._score += card
 
         if self.is_bust and self.has_ace:
             index = self._hand.index(GameConstants.ACE)

@@ -27,3 +27,4 @@ class Game:
 class Player:
     # Add player constants here
     COMPUTER_NAME = "Computer"
+    THRESHOLD = 17
